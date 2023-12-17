@@ -12,8 +12,8 @@ function loadDate() {
 
 function loadWeather() {
     var weather = $('#weather')
-    var url = 'api.openweathermap.org/data/2.5/weather'
-    var apiKey = 'f0593661187aa214f804b5170c2bdf53'
+    var url = 'http://api.openweathermap.org/data/2.5/forecast?'
+    var apiKey = 'a994d6837a806a1003b7979f7e6e2c3f'
 
     function success(position) {
         var latitude = position.coords.latitude
@@ -29,23 +29,30 @@ function loadWeather() {
           '&appid=' +
           apiKey,
         function (data) {
-            weather.text('Based on your current location, it is ' + MediaDeviceInfo.temp + '°C right now'
+            weather.text('Based on your current location, it is ' + main.temp + '°C right now')
             
-    
-            )
-            
-        console.log('function data passed')
         }
         )
     }
     
     function error() {
-        alert('Unable to retrieve weather location')
+        switch(error.code) {
+        case error.PERMISSION_DENIED:
+            alert('Permission denied')
+            break;
+        case error.POSITION_UNAVAILABLE:
+            alert('Location information unavailable')
+            break;
+        case error.TIMEOUT:
+            alert('Location request timed out')
+            break;
+
+        }
     }
     
     
     //calling the geolocation API
-    navigator.geolocation.getCurrentPosition(success, error)
+    navigator.geolocation.getCurrentPosition(success, error,{timeout:10000})
     
     weather.text('fetching weather data...')
 }
